@@ -1,0 +1,69 @@
+<div class="page-header">
+  <div>
+    <h1>Crear nueva lista</h1>
+    <p>Completa el formulario para añadir una lista de reproducción.</p>
+  </div>
+</div>
+
+<div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+<div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="card">
+  <div class="form-group">
+    <label for="nombre">Nombre *</label>
+    <input id="nombre" type="text" formControlName="nombre" placeholder="Ej. Lista 1" />
+    <div class="error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid">
+      El nombre es obligatorio y no puede estar en blanco.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="descripcion">Descripción</label>
+    <textarea id="descripcion" formControlName="descripcion" rows="3" placeholder="Descripción opcional"></textarea>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">
+      <h3>Canciones</h3>
+      <button type="button" class="btn btn-outline" (click)="addSong()">+ Añadir canción</button>
+    </div>
+
+    <div formArrayName="canciones">
+      <div *ngFor="let song of canciones.controls; let i = index" [formGroupName]="i" class="song-card">
+        <div class="song-header">
+          <strong>Canción {{ i + 1 }}</strong>
+          <button type="button" class="btn btn-danger" (click)="removeSong(i)" [disabled]="canciones.length === 1">
+            Quitar
+          </button>
+        </div>
+        <div class="song-grid">
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" formControlName="titulo" placeholder="Título" />
+          </div>
+          <div class="form-group">
+            <label>Artista</label>
+            <input type="text" formControlName="artista" placeholder="Artista" />
+          </div>
+          <div class="form-group">
+            <label>Álbum</label>
+            <input type="text" formControlName="album" placeholder="Álbum" />
+          </div>
+          <div class="form-group">
+            <label>Año</label>
+            <input type="text" formControlName="anno" placeholder="Año" />
+          </div>
+          <div class="form-group">
+            <label>Género</label>
+            <input type="text" formControlName="genero" placeholder="Género" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" [disabled]="submitting || form.invalid">Crear lista</button>
+    <a routerLink="/lists" class="btn btn-outline">Cancelar</a>
+  </div>
+</form>

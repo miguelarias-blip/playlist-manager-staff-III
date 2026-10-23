@@ -1,0 +1,43 @@
+<div class="page-header">
+  <div>
+    <h1>Listas de reproducción</h1>
+    <p>Gestiona y consulta tus listas.</p>
+  </div>
+  <a routerLink="/lists/create" class="btn btn-primary">+ Nueva lista</a>
+</div>
+
+<div class="card search-card">
+  <h2>Buscar por nombre</h2>
+  <div class="search-row">
+    <input
+      type="text"
+      [(ngModel)]="searchName"
+      placeholder="Nombre de la lista"
+      (keyup.enter)="search()"
+    />
+    <button class="btn btn-primary" (click)="search()">Buscar</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="searchError">{{ searchError }}</div>
+
+  <div class="song-card" *ngIf="searchResult">
+    <h3>{{ searchResult.nombre }}</h3>
+    <p>{{ searchResult.descripcion || 'Sin descripción' }}</p>
+    <p class="muted">{{ searchResult.canciones.length }} canciones</p>
+    <a [routerLink]="['/lists', searchResult.nombre]" class="btn btn-outline">Ver detalle</a>
+  </div>
+</div>
+
+<div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<div class="list-grid" *ngIf="!loading">
+  <div class="card list-card" *ngFor="let playlist of playlists">
+    <h3>{{ playlist.nombre }}</h3>
+    <p>{{ playlist.descripcion || 'Sin descripción' }}</p>
+    <p class="muted">{{ playlist.canciones.length }} canciones</p>
+    <a [routerLink]="['/lists', playlist.nombre]" class="btn btn-outline">Ver detalle</a>
+  </div>
+</div>
+
+<p *ngIf="!loading && playlists.length === 0" class="muted">No hay listas registradas.</p>
+<p *ngIf="loading" class="muted">Cargando...</p>

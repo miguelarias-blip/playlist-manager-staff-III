@@ -1,0 +1,7 @@
+.song-grid {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.song-grid .song-card {
+  background: var(--color-surface);
+}

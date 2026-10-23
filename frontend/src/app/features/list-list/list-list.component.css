@@ -1,0 +1,13 @@
+.search-card h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.search-row {
+  display: flex;
+  gap: 8px;
+}
+
+.search-row input {
+  flex: 1;
+}
