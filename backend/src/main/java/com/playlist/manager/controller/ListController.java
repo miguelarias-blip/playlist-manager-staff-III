@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ListController {
     @PostMapping
     public ResponseEntity<ListResponse> create(@Valid @RequestBody CreateListRequest request) {
         ListResponse created = service.create(request);
-        URI location = UriComponentsBuilder.fromCurrentContextPath()
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/lists/{listName}")
                 .buildAndExpand(created.nombre())
                 .encode()

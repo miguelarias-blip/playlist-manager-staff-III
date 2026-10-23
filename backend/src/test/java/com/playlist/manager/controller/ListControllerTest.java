@@ -113,7 +113,7 @@ class ListControllerTest {
 
         when(listService.getByName("Lista Con Espacios")).thenReturn(response);
 
-        mockMvc.perform(get("/lists/Lista%20Con%20Espacios"))
+        mockMvc.perform(get("/lists/{name}", "Lista Con Espacios"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("Lista Con Espacios"));
     }
