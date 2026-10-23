@@ -1,0 +1,205 @@
+{
+  "info": {
+    "_postman_id": "3f6b1c2a-9c4e-4b7a-8d1e-2a5f0e7b9c3d",
+    "name": "Playlist Manager",
+    "description": "Colección para probar la API REST /lists del gestor de listas de reproducción.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicUser}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{basicPassword}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "POST /lists - Crear lista válida",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 201 Created', function () { pm.response.to.have.status(201); });",
+              "pm.test('Header Location presente', function () { pm.expect(pm.response.headers.get('Location')).to.include('/lists/'); });",
+              "pm.test('Cuerpo JSON con nombre, descripcion y canciones', function () {",
+              "    var json = pm.response.json();",
+              "    pm.expect(json).to.have.property('nombre');",
+              "    pm.expect(json).to.have.property('descripcion');",
+              "    pm.expect(json).to.have.property('canciones');",
+              "    pm.expect(json.canciones).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"{{listName}}\",\n  \"descripcion\": \"Lista de canciones de Spotify\",\n  \"canciones\": [\n    {\n      \"titulo\": \"Bohemian Rhapsody\",\n      \"artista\": \"Queen\",\n      \"album\": \"A Night at the Opera\",\n      \"anno\": \"1975\",\n      \"genero\": \"Rock\"\n    },\n    {\n      \"titulo\": \"Imagine\",\n      \"artista\": \"John Lennon\",\n      \"album\": \"Imagine\",\n      \"anno\": \"1971\",\n      \"genero\": \"Pop\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/lists"
+      },
+      "response": []
+    },
+    {
+      "name": "POST /lists - Nombre inválido (vacío)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 400 Bad Request', function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"   \",\n  \"descripcion\": \"Nombre en blanco\",\n  \"canciones\": []\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/lists"
+      },
+      "response": []
+    },
+    {
+      "name": "GET /lists - Listar todas las listas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Respuesta es un array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/lists"
+      },
+      "response": []
+    },
+    {
+      "name": "GET /lists/{{listName}} - Obtener detalle",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('nombre coincide', function () { pm.expect(pm.response.json().nombre).to.eql(pm.variables.get('listName')); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/lists/{{listName}}"
+      },
+      "response": []
+    },
+    {
+      "name": "GET /lists/ListaInexistente - No encontrada",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 404 Not Found', function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/lists/ListaInexistente"
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE /lists/{{listName}} - Eliminar lista",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 204 No Content', function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/lists/{{listName}}"
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE /lists/ListaInexistente - No encontrada",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status es 404 Not Found', function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/lists/ListaInexistente"
+      },
+      "response": []
+    }
+  ]
+}
